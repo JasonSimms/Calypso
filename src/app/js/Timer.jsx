@@ -26,14 +26,14 @@ class Timer extends Component {
         {this.state.time < 45 && <button onClick={() => this._reset()}>Reset</button>}
         {this.state.time}
         <br />
-        {this.state.isRunning.toString()}
+        {/* {this.state.isRunning.toString()} */}
       </div>
     );
   }
 
   _timerToggle(key) {
     this.setState(prevState => ({ isRunning: !prevState.isRunning }));
-   if(key === "start" && !this.state.isRunning)this.timer = setInterval(() => this._countdown(), 500);
+   if(key === "start" && !this.state.isRunning)this.timer = setInterval(() => this._countdown(), 60000);
     else if (key === "pause") clearInterval(this.timer);
   }
 

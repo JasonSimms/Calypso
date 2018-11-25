@@ -1,3 +1,7 @@
+# Project Calypso
+This tool provides tracking of time spent on projects.
+The goal is to track hours spent developing projects and assigning them to Projects which can be linked to Customers for freelance billing. $$$
+
 # React + express starter template, by Lukas
 
 1. Clone or copy this repository

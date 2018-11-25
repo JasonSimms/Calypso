@@ -63,4 +63,28 @@ router.post('/update', (req, res) => {
     })
 })
 
+router.post('/new-project', (req, res) => {
+    const { title , customer, image } = req.body
+
+    if (!email || !password) res.status(400).send({ error: 'Missing Credentials.' })
+
+    User.findOne({ title })
+        .then(existingProject => {
+            if (existingProject) return res.status(400).send({ error: 'Project of this title exists already.' })
+
+            return req.files && req.files.picture ? upload(req.files.picture) : Promise.resolve()
+        })
+        .then(imageURL => {
+            return new Project({ _id: new mongoose.Types.ObjectId(), title, owner: user._id, customer, image }).save()
+        })
+        .then(user => {
+            const cleanUser = user.toObject()
+
+            delete cleanUser.password
+
+            const token = jwt.sign(cleanUser, config.SECRET_JWT_PASSPHRASE)
+            res.send({ token })
+        })
+})
+
 module.exports = router
