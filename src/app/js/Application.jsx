@@ -9,6 +9,7 @@ import Navigation from './Navigation'
 import Profile from './Profile'
 import NotFound from './NotFound'
 import api from './utils/api'
+import Timer from './Timer'
 
 class Application extends React.Component {
     constructor(props) {
@@ -31,6 +32,7 @@ class Application extends React.Component {
             <BrowserRouter>
                 <div>
                     <Navigation user={this.state.user} />
+                    <Timer />
                     <Switch>
                         <Route exact path="/" render={() => <Home user={this.state.user} />} />
                         <Route exact path="/profile" render={() => <Profile user={this.state.user} />} />
