@@ -10,6 +10,8 @@ import Profile from './Profile'
 import NotFound from './NotFound'
 import api from './utils/api'
 import Timer from './Timer'
+import NewProject from './Projects/NewProject'
+
 
 class Application extends React.Component {
     constructor(props) {
@@ -33,6 +35,7 @@ class Application extends React.Component {
                 <div>
                     <Navigation user={this.state.user} />
                     <Timer />
+                    <NewProject userID={this.state.user._id} />
                     <Switch>
                         <Route exact path="/" render={() => <Home user={this.state.user} />} />
                         <Route exact path="/profile" render={() => <Profile user={this.state.user} />} />
@@ -59,11 +62,13 @@ class Application extends React.Component {
             const decoded = jwtDecode(token)
             delete decoded.iat
             if (init) return decoded
+            console.log(decoded)
             this.setState({ user: decoded })
         } else {
             return null
         }
     }
+
 }
 
 export default Application

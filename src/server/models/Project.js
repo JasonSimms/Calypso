@@ -8,7 +8,8 @@ const projectSchema = new Schema({
         unique: true,
     },
     owner: {
-         type: Schema.Types.ObjectId, ref: 'User'
+         type: Schema.Types.ObjectId, 
+         ref: 'User'
     },
     customer: {
         type: {type: Schema.Types.ObjectId, ref: 'Customer'}
@@ -22,4 +23,4 @@ const projectSchema = new Schema({
     },
 })
 
-module.exports = mongoose.model('Project', projectSchema)
+module.exports = mongoose.model('Project', projectSchema, 'projects')

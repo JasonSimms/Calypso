@@ -2,11 +2,17 @@ const express = require('express')
 const router = express.Router()
 
 const authRoutes = require('./auth')
+const dbRoutes = require('./dbRoutes')
+
 const { userMiddleware, checkLoggedIn } = require('../../utils/middleware')
 
 router.use(userMiddleware)
 
 router.get('/', (req, res) => {
+    res.send({ hello: true })
+})
+
+router.get('/test', (req, res) => {
     res.send({ hello: true })
 })
 
@@ -16,6 +22,9 @@ router.get('/protected', checkLoggedIn, (req, res) => {
 })
 
 router.use('/auth', authRoutes)
+
+router.use('/db', dbRoutes)
+
 
 router.use((req, res) => {
     res.status(404).send({ error: 'not-found' })
