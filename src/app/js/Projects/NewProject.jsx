@@ -2,6 +2,7 @@ import React from "react";
 import { Link } from "react-router-dom";
 
 import api from "../utils/api";
+import SessionDisplay from "./SessionDisplay";
 
 class NewProject extends React.Component {
   constructor(props) {
@@ -11,7 +12,8 @@ class NewProject extends React.Component {
       title: "",
       error: "",
       projects: null,
-      activeProject: null
+      activeProject: null,
+      activeSession: null
     };
 
     this._handleInputChange = this._handleInputChange.bind(this);
@@ -19,6 +21,7 @@ class NewProject extends React.Component {
     this._fetchProjects = this._fetchProjects.bind(this);
     this._deleteItem = this._deleteItem.bind(this);
     this._selectProject = this._selectProject.bind(this);
+    this._handleSessionClick = this._handleSessionClick.bind(this);
   }
 
   componentDidMount() {
@@ -28,19 +31,25 @@ class NewProject extends React.Component {
 
   render() {
     let projectHeader;
-    this.state.activeProject ?  projectHeader = (
-      <div>
-        <h1>Active Project: {this.state.activeProject.title}</h1>
-        <button
-          onClick={() => {
-            this.setState({ activeProject: null });
-          }}
-        >
-          Change Project
-        </button>
-      </div>
-    ) :  projectHeader = null
+    this.state.activeProject
+      ? (projectHeader = (
+          <div>
+            <h1>Active Project: {this.state.activeProject.title}</h1>
+            <button
+              onClick={() => {
+                this.setState({ activeProject: null });
+              }}
+            >
+              Change Project
+            </button>
 
+            <SessionDisplay
+              session={this.state.activeSession}
+              handleSessionClick={this._handleSessionClick}
+            />
+          </div>
+        ))
+      : (projectHeader = null);
 
     let projects = this.state.projects;
     let mappedProjects;
@@ -51,7 +60,7 @@ class NewProject extends React.Component {
             {el.title}
             <button
               onClick={() => {
-                this._selectProject(el.id)
+                this._selectProject(el.id);
               }}
             >
               Select This ONe!
@@ -69,6 +78,7 @@ class NewProject extends React.Component {
     }
     return (
       <div className="container">
+        {/* {this.state.activeSession ? <p>{this.state.activeSession.toString()}</p> : <p>No Active Session</p>} */}
         {this.state.activeProject ? (
           projectHeader
         ) : (
@@ -180,11 +190,34 @@ class NewProject extends React.Component {
     }
   }
 
-
-  _selectProject(id){
+  _selectProject(id) {
     let activeProject = this.state.projects.find(obj => obj.id == id);
-    console.log(activeProject)
-    this.setState({ activeProject})
+    console.log(activeProject);
+    this.setState({ activeProject });
+  }
+
+  _handleSessionClick(key) {
+    if (key === "start") {
+      api
+        .post(`/api/db/new-session`, {
+          project: this.state.activeProject._id,
+          user: this.props.userID
+        })
+        .then(result => this.setState({ activeSession: result }))
+        .catch(err => {
+          console.log(err);
+        });
+    } else if (key === "end") {
+      api
+        .post(`/api/db/end-session`, {
+          id: this.state.activeSession._id,
+          notes: this.state.notes
+        })
+        .then(result => this.setState({ activeSession: false }))
+        .catch(err => {
+          console.log(err);
+        });
+    }
   }
 }
 

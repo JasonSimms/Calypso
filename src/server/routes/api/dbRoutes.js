@@ -1,13 +1,14 @@
 const express = require("express");
 const router = express.Router();
 const Project = require("../../models/Project");
+const Session = require("../../models/Session");
+const User = require("../../models/User");
+const mongoose = require("mongoose");
+
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const config = require("../../config");
 const upload = require("../../utils/upload");
-const User = require("../../models/User");
-const mongoose = require('mongoose')
-
 
 router.get("/test", (req, res) => {
   res.send(`hello`);
@@ -53,48 +54,50 @@ router.post("/populate2", (req, res) => {
   res.send(`update2`);
 });
 
-router.get('/fetch-projects/:owner', (req,res)=>{
+router.get("/fetch-projects/:owner", (req, res) => {
   const { owner } = req.params;
-  console.log(`fetching for:`, owner)
-  Project.find({ 'owner' : mongoose.Types.ObjectId(owner)})
-  .then(results => res.send(results))
-})
+  console.log(`fetching for:`, owner);
+  Project.find({ owner: mongoose.Types.ObjectId(owner) }).then(results =>
+    res.send(results)
+  );
+});
 
-router.post('/deletebyId', (req,res) => {
+router.post("/deletebyId", (req, res) => {
   const { key, id } = req.body;
-  Project.findByIdAndRemove(id,(err, deletedItem) =>{
-    if(err) return res.status(500).send(err)
+  Project.findByIdAndRemove(id, (err, deletedItem) => {
+    if (err) return res.status(500).send(err);
     const response = {
       message: "Project Deleted",
       id: deletedItem._id
-    }
-    return res.status(200).send(response)
-  })
-})
+    };
+    return res.status(200).send(response);
+  });
+});
 
-// ObjectId('5bfe668d4e179e63c6636fba')
+// SESSION ROUTES
 
-// const { title , customer, image } = req.body
+router.post("/new-session", (req, res) => {
+  console.log(`new session?`);
+  const { project, user } = req.body;
+  console.log(req.body);
+  if (!project || !user)
+    res.status(400).send({ error: "Missing Credentials." });
+  return new Session({ project, user }).save().then(data => {
+    res.send(data);
+  });
+});
 
-// if (!email || !password) res.status(400).send({ error: 'Missing Credentials.' })
-
-// User.findOne({ title })
-//     .then(existingProject => {
-//         if (existingProject) return res.status(400).send({ error: 'Project of this title exists already.' })
-
-//         return req.files && req.files.picture ? upload(req.files.picture) : Promise.resolve()
-//     })
-//     .then(imageURL => {
-//         return new Project({ _id: new mongoose.Types.ObjectId(), title, owner: user._id, customer, image }).save()
-//     })
-//     .then(user => {
-//         const cleanUser = user.toObject()
-
-//         delete cleanUser.password
-
-//         const token = jwt.sign(cleanUser, config.SECRET_JWT_PASSPHRASE)
-//         res.send({ token })
-//     })
-// })
+router.post("/end-session", (req, res) => {
+  console.log(`end session?`,req.body.id);
+  const { id, notes } = req.body;
+  if (!id) res.status(400).send({ error: "Missing Credentials." });
+  Session.findByIdAndUpdate(id, {
+    active: false,
+    endTime: Date.now(),
+    notes
+  }).then(data => {
+    res.send(data).catch(err => console.log(err));
+  });
+});
 
 module.exports = router;

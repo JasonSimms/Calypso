@@ -3,13 +3,28 @@ const Schema = mongoose.Schema;
 
 const sessionSchema = new Schema({
   project: {
-    type: String,
-    required: true
+    type: Schema.Types.ObjectId,
+    ref: "Project"
   },
-  updated: { 
-      type: Date, 
-      default: Date.now 
-    },
+  user: {
+    type: Schema.Types.ObjectId, 
+         ref: 'User'
+  },
+  updated: {
+    type: Date,
+    default: Date.now
+  },
+  startTime: {
+    type: Date,
+    default: Date.now
+  },
+  active:{
+    type: Boolean,
+    default: true
+  },
+  endTime: {
+    type: Date
+  },
   timeConsumed: {
     type: Number
   },
