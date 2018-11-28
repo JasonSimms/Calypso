@@ -35,7 +35,7 @@ class Application extends React.Component {
                 <div>
                     <Navigation user={this.state.user} />
                     <Timer />
-                    <NewProject userID={this.state.user._id} />
+                    {this.state.user ? <NewProject userID={this.state.user._id} /> : null}
                     <Switch>
                         <Route exact path="/" render={() => <Home user={this.state.user} />} />
                         <Route exact path="/profile" render={() => <Profile user={this.state.user} />} />

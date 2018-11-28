@@ -6,6 +6,8 @@ const jwt = require("jsonwebtoken");
 const config = require("../../config");
 const upload = require("../../utils/upload");
 const User = require("../../models/User");
+const mongoose = require('mongoose')
+
 
 router.get("/test", (req, res) => {
   res.send(`hello`);
@@ -31,7 +33,7 @@ router.post("/new-project", (req, res) => {
       return new Project({ title, owner }).save();
     })
     .then(data => {
-      res.send(`new Project`);
+      res.send(data);
     });
 });
 
@@ -50,6 +52,15 @@ router.post("/populate2", (req, res) => {
     .save(done);
   res.send(`update2`);
 });
+
+router.get('/fetch-projects/:owner', (req,res)=>{
+  const { owner } = req.params;
+  console.log(`fetching for:`, owner)
+  Project.find({ 'owner' : mongoose.Types.ObjectId(owner)})
+  .then(results => res.send(results))
+})
+
+// ObjectId('5bfe668d4e179e63c6636fba')
 
 // const { title , customer, image } = req.body
 
