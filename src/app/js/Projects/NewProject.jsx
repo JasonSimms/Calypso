@@ -15,12 +15,13 @@ class NewProject extends React.Component {
 
     this._handleInputChange = this._handleInputChange.bind(this);
     this._newProject = this._newProject.bind(this);
-    this._setProjects = this._setProjects.bind(this);
+    this._fetchProjects = this._fetchProjects.bind(this);
+    this._deleteItem = this._deleteItem.bind(this);
   }
 
   componentDidMount() {
     this._handleInputChange("title", "");
-    // this._setProjects();
+    // this._fetchProjects();
   }
 
   render() {
@@ -28,7 +29,7 @@ class NewProject extends React.Component {
     let mappedProjects;
     if (projects !== null) {
       mappedProjects = projects.map(el => {
-        return <li key={el.title}>{el.title}</li>;
+        return <li key={el.title}>{el.title}<button onClick={()=>{this._deleteItem(`Project`,el._id)}}>Delete this Project</button></li>;
       });
     }
     return (
@@ -48,7 +49,7 @@ class NewProject extends React.Component {
         </button>
         <br />
         <br />
-        <button onClick={() => this._setProjects()}>fetch projects</button>
+        <button onClick={() => this._fetchProjects()}>fetch projects</button>
         {this.state.projects && <ol>{mappedProjects}</ol>}
         <p>{this.props.error}</p>
         <div className="separator" />
@@ -91,7 +92,7 @@ class NewProject extends React.Component {
     });
   }
 
-  _setProjects() {
+  _fetchProjects() {
     console.log(`fetching projects for:`, this.props.userID);
     api
       .get(`/api/db/fetch-projects/${this.props.userID}`, (req, res) => {
@@ -105,6 +106,29 @@ class NewProject extends React.Component {
           error: err.description
         });
       });
+  }
+
+  _deleteItem(key,id){
+      console.log(`deleting a`,key,`id:`,id);
+      this.setState({
+        error: "",
+        title: ""
+      });
+      api
+        .post(`/api/db/deletebyId`, {
+          key,
+          owner: this.props.userID,
+          id
+        })
+        .then(data => {
+          console.log(data)
+        }).then(results => this._fetchProjects()
+        )
+        .catch(err => {
+          this.setState({
+            error: err.description
+          });
+        });
   }
 }
 

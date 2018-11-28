@@ -60,6 +60,18 @@ router.get('/fetch-projects/:owner', (req,res)=>{
   .then(results => res.send(results))
 })
 
+router.post('/deletebyId', (req,res) => {
+  const { key, id } = req.body;
+  Project.findByIdAndRemove(id,(err, deletedItem) =>{
+    if(err) return res.status(500).send(err)
+    const response = {
+      message: "Project Deleted",
+      id: deletedItem._id
+    }
+    return res.status(200).send(response)
+  })
+})
+
 // ObjectId('5bfe668d4e179e63c6636fba')
 
 // const { title , customer, image } = req.body
