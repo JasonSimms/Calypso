@@ -10,7 +10,8 @@ class NewProject extends React.Component {
     this.state = {
       title: "",
       error: "",
-      projects: null
+      projects: null,
+      activeProject: null,
     };
 
     this._handleInputChange = this._handleInputChange.bind(this);
@@ -29,11 +30,15 @@ class NewProject extends React.Component {
     let mappedProjects;
     if (projects !== null) {
       mappedProjects = projects.map(el => {
-        return <li key={el.title}>{el.title}<button onClick={()=>{this._deleteItem(`Project`,el._id)}}>Delete this Project</button></li>;
+        return <li key={el.title}>{el.title}>
+        <button onClick={()=>{this.setState({activeProject: el._id})}}>Select This ONe!</button>
+        <button onClick={()=>{this._deleteItem(`Project`,el._id)}}>Delete this Project</button>
+        </li>;
       });
     }
     return (
       <div className="container">
+      <h1>Active Project: {this.state.activeProject}</h1>
         <h1>Start A New Project</h1>
         <input
           type="title"
@@ -109,6 +114,7 @@ class NewProject extends React.Component {
   }
 
   _deleteItem(key,id){
+    if (confirm(`Delete this Project and all records!?!`)) {
       console.log(`deleting a`,key,`id:`,id);
       this.setState({
         error: "",
@@ -129,6 +135,10 @@ class NewProject extends React.Component {
             error: err.description
           });
         });
+  } else {
+      console.log(`Deletion Aborted`);
+  }
+      
   }
 }
 
