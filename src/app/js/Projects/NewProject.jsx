@@ -22,6 +22,7 @@ class NewProject extends React.Component {
     this._deleteItem = this._deleteItem.bind(this);
     this._selectProject = this._selectProject.bind(this);
     this._handleSessionClick = this._handleSessionClick.bind(this);
+    this._handleLocalStorage = this._handleLocalStorage.bind(this);
   }
 
   componentDidMount() {
@@ -36,12 +37,20 @@ class NewProject extends React.Component {
           <div>
             <p>Active Project: {this.state.activeProject.title}</p>
             <p>ActiveProject.id: {this.state.activeProject._id}</p>
+            {this.state.activeSession && <p>Active Session._id:{this.state.activeSession._id}</p>}
             <button
               onClick={() => {
                 this.setState({ activeProject: null });
               }}
             >
               Change Project
+            </button>
+            <button
+              onClick={() => {
+                console.log(window.localStorage.getItem("activeSession"));
+              }}
+            >
+              Debug: Get Local storage?
             </button>
 
             <SessionDisplay
@@ -191,6 +200,12 @@ class NewProject extends React.Component {
     }
   }
 
+  _handleLocalStorage(key) {
+    if (key !== "clear")
+      window.localStorage.setItem("activeSession", 'true');
+    else window.localStorage.removeItem("activeSession");
+  }
+
   _selectProject(projectID) {
     let activeProject = this.state.projects.find(obj => obj._id == projectID);
     this.setState({ activeProject });
@@ -203,22 +218,28 @@ class NewProject extends React.Component {
           project: this.state.activeProject._id,
           user: this.props.userID
         })
-        .then(result => this.setState({ activeSession: result }))
+        .then(result => {
+          this.setState({ activeSession: result })
+          this._handleLocalStorage("start")
+        })
         .catch(err => {
           console.log(err);
-        });
+        })
     } else if (key === "end") {
       api
         .post(`/api/db/end-session`, {
           id: this.state.activeSession._id,
           notes: this.state.notes
         })
-        .then(result => this.setState({ activeSession: false }))
+        .then(this._handleLocalStorage("clear"))
+        .then(result => this.setState({ activeSession: null }))
         .catch(err => {
           console.log(err);
         });
     }
   }
+
+ 
 }
 
 export default NewProject;

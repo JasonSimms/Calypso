@@ -18,8 +18,6 @@ class SessionDisplay extends Component {
   }
 
   render() {
-    console.log(this.props);
-    console.log(this.state.sessions,`***********`)
     let mySession, mappedSessions;
 
 
