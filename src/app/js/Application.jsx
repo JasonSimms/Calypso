@@ -42,7 +42,7 @@ class Application extends React.Component {
             />
             <Route
               path="/projects"
-              render={() => <ProjectsControls userID={this.state.user._id} />}
+              render={() => <ProjectsControls userID={this.state.user._id} user={this.state.user}/>}
             />
 
             <Route

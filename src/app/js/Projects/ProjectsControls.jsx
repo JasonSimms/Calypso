@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 
 import api from "../utils/api";
 import SessionDisplay from "./SessionDisplay";
+import Breadcrumb from "./Breadcrumb";
 
 class ProjectsControls extends React.Component {
   constructor(props) {
@@ -35,9 +36,9 @@ class ProjectsControls extends React.Component {
     this.state.activeProject
       ? (projectHeader = (
           <div>
-            <p>Active Project: {this.state.activeProject.title}</p>
-            <p>ActiveProject.id: {this.state.activeProject._id}</p>
-            {this.state.activeSession && <p>Active Session._id:{this.state.activeSession._id}</p>}
+            {this.state.activeSession && (
+              <p>Active Session._id:{this.state.activeSession._id}</p>
+            )}
             <button
               onClick={() => {
                 this.setState({ activeProject: null });
@@ -90,7 +91,14 @@ class ProjectsControls extends React.Component {
     return (
       <div className="container">
         {this.state.activeProject ? (
-          projectHeader
+          <div>
+            <Breadcrumb
+              user={this.props.user.email}
+              // session={this.state.session._id}
+              project={this.state.activeProject.title}
+            />
+            {projectHeader}
+          </div>
         ) : (
           <div>
             <h1>Start A New Project</h1>
@@ -116,9 +124,6 @@ class ProjectsControls extends React.Component {
             {this.state.projects && <ol>{mappedProjects}</ol>}
             <p>{this.props.error}</p>
             <div className="separator" />
-            <Link className="link" to="/auth/sign-in">
-              Did you already start a project? Continue an existing one!
-            </Link>
           </div>
         )}
       </div>
@@ -201,8 +206,7 @@ class ProjectsControls extends React.Component {
   }
 
   _handleLocalStorage(key) {
-    if (key !== "clear")
-      window.localStorage.setItem("activeSession", 'true');
+    if (key !== "clear") window.localStorage.setItem("activeSession", "true");
     else window.localStorage.removeItem("activeSession");
   }
 
@@ -219,12 +223,12 @@ class ProjectsControls extends React.Component {
           user: this.props.userID
         })
         .then(result => {
-          this.setState({ activeSession: result })
-          this._handleLocalStorage("start")
+          this.setState({ activeSession: result });
+          this._handleLocalStorage("start");
         })
         .catch(err => {
           console.log(err);
-        })
+        });
     } else if (key === "end") {
       api
         .post(`/api/db/end-session`, {
@@ -238,8 +242,6 @@ class ProjectsControls extends React.Component {
         });
     }
   }
-
- 
 }
 
 export default ProjectsControls;
