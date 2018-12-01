@@ -58,12 +58,14 @@ class Application extends React.Component {
 
     _setUser(init) {
         const token = localStorage.getItem('identity')
+        const activeSession = localStorage.getItem('activeSession')
         if (token) {
             const decoded = jwtDecode(token)
             delete decoded.iat
             if (init) return decoded
             console.log(decoded)
             this.setState({ user: decoded })
+            if(activeSession)console.log(`You have an active session!`)
         } else {
             return null
         }
