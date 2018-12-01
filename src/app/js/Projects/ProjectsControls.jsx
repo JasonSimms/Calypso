@@ -4,7 +4,7 @@ import { Link } from "react-router-dom";
 import api from "../utils/api";
 import SessionDisplay from "./SessionDisplay";
 
-class NewProject extends React.Component {
+class ProjectsControls extends React.Component {
   constructor(props) {
     super(props);
 
@@ -242,4 +242,4 @@ class NewProject extends React.Component {
  
 }
 
-export default NewProject;
+export default ProjectsControls;
