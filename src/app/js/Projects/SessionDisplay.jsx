@@ -1,17 +1,28 @@
 import React, { Component } from "react";
+import api from "../utils/api";
+
 
 class SessionDisplay extends Component {
   constructor(props) {
     super(props);
 
     this.state = {
-      isActive: false
+      isActive: false,
+      sessions: null
     };
+    this._fetchSessions = this._fetchSessions.bind(this)
+  }
+
+  componentDidMount(){
+      this._fetchSessions(this.props.project._id);
   }
 
   render() {
     console.log(this.props);
-    let mySession;
+    console.log(this.state.sessions,`***********`)
+    let mySession, mappedSessions;
+
+
     if (this.props.session) mySession = this.props.session.id;
     return (
       <div>
@@ -37,8 +48,24 @@ class SessionDisplay extends Component {
           </button>
           </div>
         }
+        {mappedSessions}
       </div>
     );
+  }
+
+  _fetchSessions(projectID){
+    api
+    .get(`/api/db/fetch-sessions/${projectID}`, (req, res) => {
+      null;
+    })
+    .then(data => {
+      this.setState({ sessions: data });
+    })
+    .catch(err => {
+      this.setState({
+        error: err.description
+      });
+    });
   }
 }
 

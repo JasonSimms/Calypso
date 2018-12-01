@@ -100,4 +100,12 @@ router.post("/end-session", (req, res) => {
   });
 });
 
+router.get("/fetch-sessions/:projectId", (req, res) => {
+  const { project } = req.params;
+  console.log(`fetching for:`, projectId);
+  Session.find({ project: mongoose.Types.ObjectId(project) }).then(results =>
+    res.send(results)
+  );
+});
+
 module.exports = router;

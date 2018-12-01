@@ -34,7 +34,8 @@ class NewProject extends React.Component {
     this.state.activeProject
       ? (projectHeader = (
           <div>
-            <h1>Active Project: {this.state.activeProject.title}</h1>
+            <p>Active Project: {this.state.activeProject.title}</p>
+            <p>ActiveProject.id: {this.state.activeProject._id}</p>
             <button
               onClick={() => {
                 this.setState({ activeProject: null });
@@ -44,6 +45,7 @@ class NewProject extends React.Component {
             </button>
 
             <SessionDisplay
+              project={this.state.activeProject}
               session={this.state.activeSession}
               handleSessionClick={this._handleSessionClick}
             />
@@ -63,7 +65,7 @@ class NewProject extends React.Component {
                 this._selectProject(el.id);
               }}
             >
-              Select This ONe!
+              Select This ONe! {el.id}
             </button>
             <button
               onClick={() => {
@@ -78,7 +80,6 @@ class NewProject extends React.Component {
     }
     return (
       <div className="container">
-        {/* {this.state.activeSession ? <p>{this.state.activeSession.toString()}</p> : <p>No Active Session</p>} */}
         {this.state.activeProject ? (
           projectHeader
         ) : (
@@ -190,8 +191,8 @@ class NewProject extends React.Component {
     }
   }
 
-  _selectProject(id) {
-    let activeProject = this.state.projects.find(obj => obj.id == id);
+  _selectProject(projectID) {
+    let activeProject = this.state.projects.find(obj => obj.id == projectID);
     console.log(activeProject);
     this.setState({ activeProject });
   }
