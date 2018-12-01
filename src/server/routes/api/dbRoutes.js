@@ -15,9 +15,7 @@ router.get("/test", (req, res) => {
 });
 
 router.post("/new-project", (req, res) => {
-  console.log(`new project?`);
   const { title, owner } = req.body;
-  console.log(req.body);
   if (!title || !owner) res.status(400).send({ error: "Missing Credentials." });
   // return new Project({ title, owner }).save().then(res.send(`new project!`));
 
@@ -96,13 +94,13 @@ router.post("/end-session", (req, res) => {
     endTime: Date.now(),
     notes
   }).then(data => {
-    res.send(data).catch(err => console.log(err));
-  });
+    res.send(data)
+  }).catch(err => console.log(err));
 });
 
-router.get("/fetch-sessions/:projectId", (req, res) => {
+router.get("/fetch-sessions/:project", (req, res) => {
   const { project } = req.params;
-  console.log(`fetching for:`, projectId);
+  console.log(`fetching for:`, project);
   Session.find({ project: mongoose.Types.ObjectId(project) }).then(results =>
     res.send(results)
   );

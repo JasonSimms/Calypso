@@ -62,10 +62,10 @@ class NewProject extends React.Component {
             {el.title}
             <button
               onClick={() => {
-                this._selectProject(el.id);
+                this._selectProject(el._id);
               }}
             >
-              Select This ONe! {el.id}
+              Select This ONe: {el._id}
             </button>
             <button
               onClick={() => {
@@ -192,8 +192,7 @@ class NewProject extends React.Component {
   }
 
   _selectProject(projectID) {
-    let activeProject = this.state.projects.find(obj => obj.id == projectID);
-    console.log(activeProject);
+    let activeProject = this.state.projects.find(obj => obj._id == projectID);
     this.setState({ activeProject });
   }
 
