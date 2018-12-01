@@ -8,7 +8,7 @@ class SessionDisplay extends Component {
     this.state = {
       isActive: false,
       isLoaded: false,
-      sessions: false
+      sessions: []
     };
     this._fetchSessions = this._fetchSessions.bind(this);
   }
@@ -21,7 +21,14 @@ class SessionDisplay extends Component {
     let mySession, mappedSessions;
 
     mappedSessions = <p>some sessions</p>;
-    if (this.state.isLoaded) console.log(`sessions`, this.state.sessions);
+    if (this.state.sessions.length > 0)
+      mappedSessions = this.state.sessions.map(el => {
+        return (
+          <li>
+            Start: {el.startTime} End:{el.endTime}
+          </li>
+        );
+      });
 
     if (this.props.session) mySession = this.props.session.id;
     return (
@@ -37,11 +44,11 @@ class SessionDisplay extends Component {
           </button>
         ) : (
           <div>
-            wtf
             <button
               onClick={() => {
                 this.props.handleSessionClick("end");
                 this.setState({ isActive: false });
+                this._fetchSessions(this.props.project._id);
               }}
             >
               Call it a day!
@@ -49,19 +56,17 @@ class SessionDisplay extends Component {
           </div>
         )}
         <p>I got your sessions right here...</p>
-        {this.state.sessions && this.state.sessions.length}
-        {mappedSessions}
+        <ol>{mappedSessions}</ol>
       </div>
     );
   }
 
   _fetchSessions(projectID) {
     api
-      .get(`/api/db/fetch-sessions/${projectID}`, (req, res) => {
-        null;
-      })
+      .get(`/api/db/fetch-sessions/${projectID}`)
       .then(data => {
         this.setState({ sessions: data });
+        // console.log(data)
       })
       .catch(err => {
         this.setState({
