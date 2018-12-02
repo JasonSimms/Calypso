@@ -14,7 +14,10 @@ class ProjectsControls extends React.Component {
       error: "",
       projects: null,
       activeProject: null,
-      activeSession: null
+      activeSession: null,
+      activeDetails: null,
+      activeEdit: null,
+      notes: "",
     };
 
     this._handleInputChange = this._handleInputChange.bind(this);
@@ -24,6 +27,7 @@ class ProjectsControls extends React.Component {
     this._selectProject = this._selectProject.bind(this);
     this._handleSessionClick = this._handleSessionClick.bind(this);
     this._handleLocalStorage = this._handleLocalStorage.bind(this);
+    this._editProject = this._editProject.bind(this);
   }
 
   componentDidMount() {
@@ -46,6 +50,15 @@ class ProjectsControls extends React.Component {
             >
               Change Project
             </button>
+            <button
+              onClick={() => {
+                this._editProject(el._id);
+              }}
+            >
+              Edit This Project
+            </button>
+            <br/>
+            <br/>
             {/* <button
               onClick={() => {
                 console.log(window.localStorage.getItem("activeSession"));
@@ -58,6 +71,8 @@ class ProjectsControls extends React.Component {
               project={this.state.activeProject}
               session={this.state.activeSession}
               handleSessionClick={this._handleSessionClick}
+              notes={this.state.notes}
+              handleInputChange={this._handleInputChange}
             />
           </div>
         ))
@@ -75,14 +90,15 @@ class ProjectsControls extends React.Component {
                 this._selectProject(el._id);
               }}
             >
-              Select This ONe!
+              Select
             </button>
+            
             <button
               onClick={() => {
                 this._deleteItem(`Project`, el._id);
               }}
             >
-              Delete this Project
+              Delete
             </button>
           </li>
         );
@@ -95,7 +111,7 @@ class ProjectsControls extends React.Component {
             <Breadcrumb
               user={this.props.user.email}
               // session={this.state.session._id}
-              project={this.state.activeProject.title}
+              project={this.state.activeProject}
             />
             {projectHeader}
           </div>
@@ -242,6 +258,10 @@ class ProjectsControls extends React.Component {
           console.log(err);
         });
     }
+  }
+
+  _editProject(id){
+    console.log(`Edit this shit already`,id)
   }
 }
 

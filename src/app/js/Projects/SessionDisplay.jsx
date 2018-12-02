@@ -18,34 +18,43 @@ class SessionDisplay extends Component {
   }
 
   render() {
-    let mySession, mappedSessions;
+    let mySession, mappedSessions, accruedTime;
 
-
-    let sessionTable = <p>Get to work already! Hit Start Session to start timing your work.</p>;
-    if (this.state.sessions.length > 0){
-     
+    let sessionTable = (
+      <p>Get to work already! Hit Start Session to start timing your work.</p>
+    );
+    if (this.state.sessions.length > 0) {
+      accruedTime = this.state.sessions.reduce((acc, element) => {
+        return acc + element.duration;
+      }, 0);
 
       mappedSessions = this.state.sessions.map((el, index) => {
         return (
           <tr key={el._id}>
-            <td>{index+1}</td>
+            <td>{index + 1}</td>
             <td>{el.startTime}</td>
             <td>{el.endTime}</td>
             <td>{el.duration}</td>
+            <td>{el.notes}</td>
+
           </tr>
         );
       });
       sessionTable = (
         <table>
-          <tr>
-            <th>Session:</th>
-            <th>StartTime</th>
-            <th>EndTime</th>
-            <th>Duration</th>
-          </tr>
-          {mappedSessions}
+          <thead>
+            <tr>
+              <th>Session:</th>
+              <th>StartTime</th>
+              <th>EndTime</th>
+              <th>Duration</th>
+              <th>Notes</th>
+
+            </tr>
+          </thead>
+          <tbody>{mappedSessions}</tbody>
         </table>
-      )
+      );
     }
 
     if (this.props.session) mySession = this.props.session.id;
@@ -64,6 +73,19 @@ class SessionDisplay extends Component {
           <div className="popup">
             <div className="popup_inner">
               <h4>You have an active Session! do not hit refresh please.</h4>
+              <textarea
+                    type="text"
+                    value={this.props.notes}
+                    onChange={evt => this.props.handleInputChange('notes', evt.target.value)}
+                    className="input"
+                    placeholder="Notes: what did you do with your time?"
+                    cols="30"
+                    rows="10"
+                />
+
+
+
+
               <button
                 onClick={() => {
                   this.props.handleSessionClick("end");
@@ -76,6 +98,7 @@ class SessionDisplay extends Component {
             </div>
           </div>
         )}
+        Accrued Project Time: {accruedTime}
         {sessionTable}
       </div>
     );

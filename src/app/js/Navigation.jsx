@@ -13,7 +13,7 @@ const Navigation = props => {
                         <span>
                             &nbsp; &nbsp; &nbsp;
                             <Link className="link nav-link" to="/profile">
-                                Profile
+                                User: {props.user.email}
                             </Link>
                         </span>
                     )}
