@@ -5,7 +5,6 @@ class Breadcrumb extends Component {
         super(props);
       }
     render() {
-        // console.log('breadcrumbs...',this.props)
         return (
             <div>
                 User: {this.props.user} Project: {this.props.project} Sessions: {this.props.session}

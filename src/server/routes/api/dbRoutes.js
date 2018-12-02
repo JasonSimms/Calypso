@@ -86,16 +86,20 @@ router.post("/new-session", (req, res) => {
 });
 
 router.post("/end-session", (req, res) => {
-  console.log(`end session?`,req.body.id);
-  const { id, notes } = req.body;
+  const { id, notes, start } = req.body;
+  let endTime = Date.now();
+  let duration = Math.floor((endTime - new Date(start).getTime())/1000)
   if (!id) res.status(400).send({ error: "Missing Credentials." });
   Session.findByIdAndUpdate(id, {
     active: false,
-    endTime: Date.now(),
-    notes
-  }).then(data => {
-    res.send(data)
-  }).catch(err => console.log(err));
+    endTime: endTime,
+    notes,
+    duration
+  })
+    .then(data => {
+      res.send(data);
+    })
+    .catch(err => console.log(err));
 });
 
 router.get("/fetch-sessions/:project", (req, res) => {

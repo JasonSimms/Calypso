@@ -20,15 +20,33 @@ class SessionDisplay extends Component {
   render() {
     let mySession, mappedSessions;
 
-    mappedSessions = <p>some sessions</p>;
-    if (this.state.sessions.length > 0)
-      mappedSessions = this.state.sessions.map(el => {
+
+    let sessionTable = <p>Get to work already! Hit Start Session to start timing your work.</p>;
+    if (this.state.sessions.length > 0){
+     
+
+      mappedSessions = this.state.sessions.map((el, index) => {
         return (
-          <li>
-            Start: {el.startTime} End:{el.endTime}
-          </li>
+          <tr key={el._id}>
+            <td>{index+1}</td>
+            <td>{el.startTime}</td>
+            <td>{el.endTime}</td>
+            <td>{el.duration}</td>
+          </tr>
         );
       });
+      sessionTable = (
+        <table>
+          <tr>
+            <th>Session:</th>
+            <th>StartTime</th>
+            <th>EndTime</th>
+            <th>Duration</th>
+          </tr>
+          {mappedSessions}
+        </table>
+      )
+    }
 
     if (this.props.session) mySession = this.props.session.id;
     return (
@@ -43,20 +61,22 @@ class SessionDisplay extends Component {
             Start a session!
           </button>
         ) : (
-          <div>
-            <button
-              onClick={() => {
-                this.props.handleSessionClick("end");
-                this.setState({ isActive: false });
-                this._fetchSessions(this.props.project._id);
-              }}
-            >
-              Call it a day!
-            </button>
+          <div className="popup">
+            <div className="popup_inner">
+              <h4>You have an active Session! do not hit refresh please.</h4>
+              <button
+                onClick={() => {
+                  this.props.handleSessionClick("end");
+                  this.setState({ isActive: false });
+                  this._fetchSessions(this.props.project._id);
+                }}
+              >
+                Call it a day!
+              </button>
+            </div>
           </div>
         )}
-        <p>I got your sessions right here...</p>
-        <ol>{mappedSessions}</ol>
+        {sessionTable}
       </div>
     );
   }

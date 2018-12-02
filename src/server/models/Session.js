@@ -25,8 +25,9 @@ const sessionSchema = new Schema({
   endTime: {
     type: Date
   },
-  timeConsumed: {
-    type: Number
+  duration: {
+    type: Number,
+    default: 3
   },
   notes: {
     type: String

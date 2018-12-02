@@ -46,13 +46,13 @@ class ProjectsControls extends React.Component {
             >
               Change Project
             </button>
-            <button
+            {/* <button
               onClick={() => {
                 console.log(window.localStorage.getItem("activeSession"));
               }}
             >
               Debug: Get Local storage?
-            </button>
+            </button> */}
 
             <SessionDisplay
               project={this.state.activeProject}
@@ -75,7 +75,7 @@ class ProjectsControls extends React.Component {
                 this._selectProject(el._id);
               }}
             >
-              Select This ONe: {el._id}
+              Select This ONe!
             </button>
             <button
               onClick={() => {
@@ -233,7 +233,8 @@ class ProjectsControls extends React.Component {
       api
         .post(`/api/db/end-session`, {
           id: this.state.activeSession._id,
-          notes: this.state.notes
+          notes: this.state.notes,
+          start: this.state.activeSession.startTime
         })
         .then(this._handleLocalStorage("clear"))
         .then(result => this.setState({ activeSession: null }))
