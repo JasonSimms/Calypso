@@ -36,6 +36,9 @@ class SessionDisplay extends Component {
             <td>{el.endTime}</td>
             <td>{el.duration}</td>
             <td>{el.notes}</td>
+            <td>Edit</td>
+            <td>Del</td>
+
 
           </tr>
         );
@@ -49,6 +52,9 @@ class SessionDisplay extends Component {
               <th>EndTime</th>
               <th>Duration</th>
               <th>Notes</th>
+              <th>Edit</th>
+              <th>Delete</th>
+
 
             </tr>
           </thead>

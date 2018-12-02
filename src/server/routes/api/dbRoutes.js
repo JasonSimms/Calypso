@@ -55,9 +55,9 @@ router.post("/populate2", (req, res) => {
 router.get("/fetch-projects/:owner", (req, res) => {
   const { owner } = req.params;
   console.log(`fetching for:`, owner);
-  Project.find({ owner: mongoose.Types.ObjectId(owner) }).then(results =>
-    res.send(results)
-  );
+  Project.find({ owner: mongoose.Types.ObjectId(owner) }, null, {
+    sort: { updated: -1 }
+  }).then(results => res.send(results));
 });
 
 router.post("/deletebyId", (req, res) => {
@@ -88,7 +88,7 @@ router.post("/new-session", (req, res) => {
 router.post("/end-session", (req, res) => {
   const { id, notes, start } = req.body;
   let endTime = Date.now();
-  let duration = Math.floor((endTime - new Date(start).getTime())/1000)
+  let duration = Math.floor((endTime - new Date(start).getTime()) / 1000);
   if (!id) res.status(400).send({ error: "Missing Credentials." });
   Session.findByIdAndUpdate(id, {
     active: false,

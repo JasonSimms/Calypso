@@ -110,7 +110,6 @@ class ProjectsControls extends React.Component {
           <div>
             <Breadcrumb
               user={this.props.user.email}
-              // session={this.state.session._id}
               project={this.state.activeProject}
             />
             {projectHeader}
@@ -253,7 +252,7 @@ class ProjectsControls extends React.Component {
           start: this.state.activeSession.startTime
         })
         .then(this._handleLocalStorage("clear"))
-        .then(result => this.setState({ activeSession: null }))
+        .then(result => this.setState({ activeSession: null, notes: null }))
         .catch(err => {
           console.log(err);
         });
