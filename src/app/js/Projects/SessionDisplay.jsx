@@ -101,6 +101,13 @@ class SessionDisplay extends Component {
               >
                 Call it a day!
               </button>
+              <button
+            onClick={() => {
+              this.props.debug();
+            }}
+            >
+              Debug
+            </button>
             </div>
           </div>
         )}

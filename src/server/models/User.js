@@ -1,27 +1,34 @@
-const mongoose = require('mongoose')
-const Schema = mongoose.Schema
+const mongoose = require("mongoose");
+const Schema = mongoose.Schema;
 
 const userSchema = new Schema({
-    email: {
-        type: String,
-        required: true,
-        unique: true,
-    },
-    password: {
-        type: String,
-    },
-    profilePicture: {
-        type: String,
-        default:
-            'https://upload.wikimedia.org/wikipedia/commons/9/93/Default_profile_picture_%28male%29_on_Facebook.jpg',
-    },
-    projects: [{
-            type: Schema.Types.ObjectId, 
-            ref: 'Project'
-        }]
-})
+  email: {
+    type: String,
+    required: true,
+    unique: true
+  },
+  password: {
+    type: String
+  },
+  profilePicture: {
+    type: String,
+    default:
+      "https://upload.wikimedia.org/wikipedia/commons/9/93/Default_profile_picture_%28male%29_on_Facebook.jpg"
+  },
+  projects: [
+    {
+      type: Schema.Types.ObjectId,
+      ref: "Project"
+    }
+  ],
+  session: { type: Schema.Types.ObjectId, ref: "Session" },
+  openSession: {
+    type: Boolean,
+    default: false
+  }
+});
 
-module.exports = mongoose.model('User', userSchema, 'users')
+module.exports = mongoose.model("User", userSchema, "users");
 
 /*
 Populate is a better tool for this since you are creating a many to many relationship between posts and categories. Subdocuments are appropriate when they belong exclusively to the parent object. You will need to change your postSchema to use a reference:

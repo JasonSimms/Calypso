@@ -1,0 +1,21 @@
+.project-board {
+  background-color: chartreuse;
+}
+
+.select-project {
+  background-color: none;
+  margin-right:5px;
+}
+
+.delete-project {
+  background-color: red;
+  position: absolute;
+  right:2vw;
+}
+
+.project {
+//   width: 100vw;
+  display: flex;
+  height: 10vh;
+  align-items: center;
+}

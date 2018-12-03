@@ -82,6 +82,15 @@ router.post("/new-session", (req, res) => {
     res.status(400).send({ error: "Missing Credentials." });
   return new Session({ project, user }).save().then(data => {
     res.send(data);
+    console.log(data._id, data.user);
+    User.findByIdAndUpdate(data.user, {
+      session: data._id,
+      openSession: true
+    })
+      .then(data => {
+        console.log(data);
+      })
+      .catch(err => console.log(err));
   });
 });
 
@@ -97,7 +106,13 @@ router.post("/end-session", (req, res) => {
     duration
   })
     .then(data => {
-      res.send(data);
+      res.send(data)
+      User.findByIdAndUpdate(data.user, {
+        openSession:false 
+      })
+        .then(data => {
+          console.log(data);
+        })
     })
     .catch(err => console.log(err));
 });
@@ -108,6 +123,18 @@ router.get("/fetch-sessions/:project", (req, res) => {
   Session.find({ project: mongoose.Types.ObjectId(project) }).then(results =>
     res.send(results)
   );
+});
+
+router.post("/debug", (req, res) => {
+  const { user, session } = req.body;
+  if (!session) res.status(400).send({ error: "Missing Credentials." });
+  User.findByIdAndUpdate(user, {
+    session
+  })
+    .then(data => {
+      console.log(data);
+    })
+    .catch(err => console.log(err));
 });
 
 module.exports = router;

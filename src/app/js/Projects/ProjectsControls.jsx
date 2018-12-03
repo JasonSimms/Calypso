@@ -17,7 +17,7 @@ class ProjectsControls extends React.Component {
       activeSession: null,
       activeDetails: null,
       activeEdit: null,
-      notes: "",
+      notes: ""
     };
 
     this._handleInputChange = this._handleInputChange.bind(this);
@@ -28,6 +28,7 @@ class ProjectsControls extends React.Component {
     this._handleSessionClick = this._handleSessionClick.bind(this);
     this._handleLocalStorage = this._handleLocalStorage.bind(this);
     this._editProject = this._editProject.bind(this);
+    this._debug = this._debug.bind(this);
   }
 
   componentDidMount() {
@@ -52,13 +53,14 @@ class ProjectsControls extends React.Component {
             </button>
             <button
               onClick={() => {
-                this._editProject(el._id);
+                this._editProject(this.state.activeProject._id);
               }}
             >
               Edit This Project
             </button>
-            <br/>
-            <br/>
+           
+            <br />
+            <br />
             {/* <button
               onClick={() => {
                 console.log(window.localStorage.getItem("activeSession"));
@@ -73,6 +75,7 @@ class ProjectsControls extends React.Component {
               handleSessionClick={this._handleSessionClick}
               notes={this.state.notes}
               handleInputChange={this._handleInputChange}
+              debug={this._debug}
             />
           </div>
         ))
@@ -83,17 +86,19 @@ class ProjectsControls extends React.Component {
     if (projects !== null) {
       mappedProjects = projects.map(el => {
         return (
-          <li key={el.title}>
-            {el.title}
+          <li key={el.title} className="project">
+              
             <button
+              className="select-project"
               onClick={() => {
                 this._selectProject(el._id);
               }}
             >
               Select
             </button>
-            
+            {el.title}
             <button
+              className="delete-project"
               onClick={() => {
                 this._deleteItem(`Project`, el._id);
               }}
@@ -107,38 +112,45 @@ class ProjectsControls extends React.Component {
     return (
       <div className="container">
         {this.state.activeProject ? (
-          <div>
+          <div className="project-details">
             <Breadcrumb
               user={this.props.user.email}
               project={this.state.activeProject}
+              // deleteProject={this._deleteItem}
             />
             {projectHeader}
           </div>
         ) : (
           <div>
-            <h1>Start A New Project</h1>
-            <input
-              type="title"
-              value={this.state.title}
-              onChange={evt =>
-                this._handleInputChange("title", evt.target.value)
-              }
-              className="input"
-              placeholder="myProject"
-            />
-            <br />
-            <br />
-            <button className="button" onClick={() => this._newProject()}>
-              Project Initiate!
+            <div className="flex">
+              {/* <h3>Start A New Project: </h3> */}
+              <input
+                type="title"
+                value={this.state.title}
+                onChange={evt =>
+                  this._handleInputChange("title", evt.target.value)
+                }
+                className="input"
+                placeholder="myProject"
+              />
+              <br />
+              <br />
+              <button className="button" onClick={() => this._newProject()}>
+                Initiate a new project!
+              </button>
+              <br />
+              <br />
+            </div>
+            <button
+              className="button refresh"
+              onClick={() => this._fetchProjects()}
+            >
+              Refresh Project List
             </button>
-            <br />
-            <br />
-            <button onClick={() => this._fetchProjects()}>
-              fetch projects
-            </button>
-            {this.state.projects && <ol>{mappedProjects}</ol>}
-            <p>{this.props.error}</p>
-            <div className="separator" />
+            <h4>Your projects:</h4>
+            <div className="project-list">
+              {this.state.projects && <ol>{mappedProjects}</ol>}
+            </div>
           </div>
         )}
       </div>
@@ -239,7 +251,6 @@ class ProjectsControls extends React.Component {
         })
         .then(result => {
           this.setState({ activeSession: result });
-          this._handleLocalStorage("start");
         })
         .catch(err => {
           console.log(err);
@@ -259,8 +270,16 @@ class ProjectsControls extends React.Component {
     }
   }
 
-  _editProject(id){
-    console.log(`Edit this shit already`,id)
+  _editProject(id) {
+    console.log(`Edit this shit already`, id);
+  }
+
+  _debug(){
+    console.log(`Debug:`,this.state.activeSession)
+    api.post('/api/db/debug',{
+      session: this.state.activeSession._id,
+      user: this.state.activeSession.user
+    }).then(data => console.log(data))
   }
 }
 

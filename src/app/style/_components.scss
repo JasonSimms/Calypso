@@ -6,6 +6,7 @@
     border: none;
     outline: none;
     border-radius: 3px;
+    // height:10vh;
 
     &:hover {
         cursor: pointer;
@@ -19,6 +20,11 @@
             background-color: lighten($secondary-color, 8%);
         }
     }
+}
+
+.refresh{
+    height: 5vh;
+    margin-top: 3vh;
 }
 
 .input {
